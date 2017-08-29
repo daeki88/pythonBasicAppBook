@@ -151,6 +151,7 @@ pip install 패키지이름
 프로젝트에 새로운 파일을 만들어 보자.
 
 <img src="images/pycharm_new_file.png" style="width: 600px;"/>
+
 1. 왼쪽편에 있는 프로젝트 이름을 마우스 오른쪽 클릭하고
 1. New를 누른 후
 1. Python File을 누르면 팝업창이 뜬다.
