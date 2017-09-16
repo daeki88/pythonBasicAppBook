@@ -462,7 +462,7 @@ import turtle
 연필 = turtle.Pen()
 색깔들 = ["red", "yellow", "blue"]
 
-문자열 = ["한민족", "평화", "통일"]
+문자열 = ["한반도", "평화", "통일"]
 
 for x in range(1, 60):
     연필.pencolor(색깔들[x % len(문자열)])
@@ -473,6 +473,7 @@ for x in range(1, 60):
     연필.left(360 / len(문자열) + 5)
 창.mainloop()
 ```
+<img src="images/turtle_spiral_char.png" style="width: 600px"/>
 
 - `창 = turtle.Screen()`과 같이 변수 이름(`창`)으로 한글을 사용할 수 있다.
 - `창.bgcolor("black")`을 이용하여 배경색을 검은색으로 만든다.
@@ -481,6 +482,7 @@ for x in range(1, 60):
 - `문자열 = ["한민족", "평화", "통일"]`을 이용해 문자열들을 담을 변수 `문자열`을 만든다.
 - `for` 문을 이용해 `x`가 1부터 59까지 반복하게 한다.
 - `색깔들[x % len(문자열)]`을 분석해보자. `len(문자열)`은 `문자열` 리스트가 가지고 있는 항목들의 갯수, 즉 `3`을 반환한다. 그리고 `x % len(문자열)`은 `x % 3`이고 이것은 `x`를 3으로 나눴을 때 나머지를 뜻하는 것이므로 0, 1, 2중의 하나가 된다.
+- `font = (폰트이름, 폰트크기, 폰트타입)`
 
 거북이를 이용하여 임의로 만든 수가 양수이면 왼쪽으로 50만큼, 그렇지 않으면 오른쪽으로 50만큼 이동하는 것을 30번 반복하는 프로그램을 만들어 보자.
 
@@ -525,6 +527,8 @@ for i in range(n): # n번 반복
     angela.circle(r, 360 / n) # 반지름 r인 원 위에서 360/n도 회전
 turtle.mainloop()
 ```
+
+<img src="images/turtle_circle_stamp.png" style="width: 600px"/>
 
 - 원의 반지름 `r`과 원 위에 찍을 발자국의 개수 `n`을 설정한다.
 - `turtle.shape('turtle')`를 이용하여 거북이 모양으로 모양을 변경한다.
