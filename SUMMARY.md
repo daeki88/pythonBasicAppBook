@@ -5,3 +5,5 @@
 * [기초](Basics.md)
 
 * [흐름 제어](ControlFlow.md)
+
+* [함수](Functions.md)
