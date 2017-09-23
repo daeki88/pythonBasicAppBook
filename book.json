@@ -1,5 +1,5 @@
 {
-		"plugins": ["katex", "-highlight", "sunlight-highlighter"]
+		"plugins": ["katex", "-highlight", "sunlight-highlighter"],
 		
 		"pluginsConfig": {
 			"sunlight-highlighter": {
