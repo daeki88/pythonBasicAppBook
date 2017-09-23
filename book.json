@@ -1,3 +1,10 @@
 {
-    "plugins": ["katex"]
+		"plugins": ["katex", "-highlight", "sunlight-highlighter"]
+		
+		"pluginsConfig": {
+			"sunlight-highlighter": {
+			"theme": "dark",
+			"lineNumbers": true
+			}
+		}
 }
