@@ -7,3 +7,5 @@
 * [흐름 제어](ControlFlow.md)
 
 * [함수](Functions.md)
+
+* [데이터 형](DataTypes.md)
