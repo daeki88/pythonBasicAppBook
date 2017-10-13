@@ -228,7 +228,7 @@ print("복소수 ", 복소수, "의 실수부분은 ", 복소수.real, "이고 �
 
 ## 리스트(list)
 
-리스트는 순서가 매겨진 객체들을 일렬로 나열한 데이터 형이다.
+[리스트](https://docs.python.org/3/tutorial/datastructures.html#more-on-lists)는 순서가 매겨진 객체들을 일렬로 나열한 데이터 형이다.
 
 ### 리스트 만들기
 
@@ -1331,26 +1331,72 @@ A가 B에 포함된다를 판단하는 메소드는 `A.issubset(B)` 또는 `A <=
 
 리스트, 튜플, 문자열등과 같이 순서가 있는 항목들을 담고 있는 데이터 형을 [열거형](https://docs.python.org/3/library/stdtypes.html#typesseq)이라고 한다. 열거형의 항목은 인덱스를 통해서 접근할 수 있다.
 
-### 연산
+### 공통 연산
 
-|Operation|Result|Notes|
+아래 표에서 `s`와 `t`는 열거형 객체이다. `i`, `j`, `k`, `n`은 정수이다.
+
+| 연산 | 결과 | 참고 |
 | ---- | ----- | ----- |
-|`x in s` | `True` if an item of s is equal to x, else `False`|(1)|
-|`x not in s` | `False` if an item of s is equal to x, else `True`|(1)|
-|`s + t` | the concatenation of `s` and `t`|(6)(7)|
-|`s * n or n * s` | equivalent to adding `s` to itself `n` times|(2)(7)|
-|`s[i]` | `i`th item of `s`, origin 0|(3)|
-|`s[i:j]` | slice of `s` from `i` to `j`|(3)(4)|
-|`s[i:j:k]` | slice of `s` from `i` to `j` with step `k`|(3)(5)|
-|`len(s)` | length of `s`||
-|`min(s)` | smallest item of `s`||
-|`max(s)` | largest item of `s`||
-|`s.index(x[, i[, j]])` | index of the first occurrence of `x` in `s` (at or after index `i` and before index `j`)|(8)|
-|`s.count(x)` | total number of occurrences of `x` in `s`||
+|`x in s` | `x`가 `s`의 성분이면 `True` 그렇지 않으면 `False`|(1)|
+|`x not in s` | `x`가 `s`의 원소이면 `False` 그렇지 않으면 `True`|(1)|
+|`s + t` | `s`와 `t`를 합친다. |(6)(7)|
+|`s * n` 또는 `n * s` | `s`를 `n`번 합친다. `n`은 정수이다. |(2)(7)|
+|`s[i]` | `s`의 `i`번째 성분, 시작은 `0`부터이다. |(3)|
+|`s[i:j]` | `s`의 `i`부터 `j`까지 성분들 |(3)(4)|
+|`s[i:j:k]` | `i`부터 `j`까지 `k`간격의 `s`의 성분들 |(3)(5)|
+|`len(s)` | `s`의 크기 ||
+|`min(s)` | `s`의 가장 작은 성분 ||
+|`max(s)` | `s`의 가장 큰 성분 ||
+|`s.index(x[, i[, j]])` | `s`의 성분 중 `x`가 첫번째로 나오는 인덱스(`i`번째 이후 `j`번째 미만 인덱스 중) |(8)|
+|`s.count(x)` | `s`의 성분 중 `x`가 나오는 횟수 ||
 
-### 슬라이싱
+참고
 
-슬라이싱에 대한 참조 https://docs.python.org/3.6/library/stdtypes.html#common-sequence-operations
+1. 일반적으로 `in`, `not in` 연산은 성분이 포함되어 있는지를 판단할 때 사용하지만 `str`, `bytes` `bytesarray` 열거형 같은 경우에는 문자열이 포함되어 있는지를 판단할 때 사용될 수 있다.
+```python
+>>> "gg" in "eggs"
+True
+```
+1. `n`이 `0`보다 작거나 같을 때는 빈 객체를 반환한다. `s`의 성분들이 복사되는 것이 아니라 참조가 되는 것에 주의해야 한다.
+```python
+>>> lists = [[]] * 3
+>>> lists
+[[], [], []]
+>>> lists[0].append(3)
+>>> lists
+[[3], [3], [3]]
+```
+`[[]]`은 빈 리스트 `[]`를 성분으로 갖는 리스트이다. `[[]] * 3`은 빈 리스트 `[]`에 대한 3개의 참조를 성분으로 갖는다. 따라서 빈 리스트에 성분을 추가하면 `lists[0].append(3)` 모든 3개의 성분이 같이 바뀌는 것이다.
+1. `i` 또는 `j`가 음수이면 `len(s) + i` 또는 `len(s) + j`로 대체된다. `-0`은 `0`이다. `len(s) + i` 또는 `len(s) + j`가 `0`보다 작으면 모두 `0`을 사용하는 것 같다.
+1. `s[i:j]`란 `i`보다 크거나 같고 `j`보다 작은 인덱스에 대한 항목들을 나열한다. 만약 `i` 또는 `j`가 `len(s)` 보다 크면 `len(s)`를 사용한다. 만일 `i`가 빠져있거나 `None`이면 `0`을 사용한다. 만일 `j`가 빠져있거나 `None`이면 `len(s)`를 사용한다. 만일 `i`가 `j`보다 크거나 같은 빈 항목을 반환한다.
+1. `s[i:j:k]` 은 `i + n*k` 항목들의 나열이다. `n`은 `0 <= n < (j-i)/k`을 만족하는 정수이다. 즉, `i`, `i + k`, `i + 2*k`, `i + 3*k` 인덱스에 해당하는 항목들의 나열이다. `k`가 양수일 때, `i`와 `j`가 `len(s)`보다 크면, `i`와 `j`는 `len(s)`를 사용한다. `k`가 음수일 때, `i`와 `j`가 `len(s)`보다 크면, `i`와 `j`는 `len(s) - 1`를 사용한다. 만일 `i` 또는 `j`가 빠져 있으면 각각 끝 값을 사용한다(`k`가 양수이면 `i`는 `0`, `j`는 `len(s) `이고, `k`가 음수이면 `i`는 `len(s) - 1`이고 `j`는 `-1`처럼 계산해야 한다). `k`는 `0`이 될 수 없고, `k`가 `None`이면 `1`로 간주한다.
+1. 불변 열거형의 덧셈 연산 결과는 항상 새로운 객체이다.
+1. `range` 열거형은 덧셈, 곱셈 연산을 지원하지 않는다.
+1. `x`가 `s`안에 없으면 `index()` 함수는 `ValueError`를 발생 시킨다.
+
+### 가변 열거형 연산
+
+| 연산 | 결과 | 참고 |
+| ---- | ----- | ----- |
+|`s[i] = x` | `s`의 `i`번째 성분을 `x`로 바꾼다.||
+|`s[i:j] = t` | `s`의 `i`부터 `j` 성분까지 반복가능한 객체 `t`로 바꾼다.|(1)|
+|`del s[i:j]` | `i`부터 `j-1` 성분을 제거한다. ||
+|`s[i:j:k] = t` | `s[i:j:k]` 성분들을 `t`로 바꾼다. |(2)|
+|`del s[i:j:k]` | `s[i:j:k]` 성분들을 제거한다. ||
+|`s.append(x)` | `s`의 마지막에 `x`를 추가한다. ||
+|`s.clear()` | `s`의 모든 성분을 제거한다(`del s[:]`와 같다). ||
+|`s.copy()` | `s`의 얕은 복사를 한다(`s[:]`와 같다). ||
+|`s.extend(t)` 또는 `s += t` | `s`에 `t`를 추가한다. ||
+|`s *= n` | `s`의 성분들을 `n`번 반복한 내용으로 바꾼다. ||
+| `s.insert(i, x)` | `s`의 `i`번째 인덱스에 `x`를 삽입한다.||
+| `s.pop([i])` | `s`의 `i`번째 성분을 반환하고 제거한다.||
+| `s.remove(x)` | `s`의 성분 중 `x`와 같은 첫번째 성분을 제거한다. ||
+| `s.reverse()` | `s`의 성분들의 순서를 뒤집는다. ||
+
+참고
+
+1. 반복가능 객체의 크기가 인덱스 갯수보다 작으면 `s`의 크기가 `t`의 갯수에 맞추어 작아진다. 반대로 크면 `s`의 크기가 늘어난다. 만일 `j`가 `i`보다 작으면 반복가능 객체가 `i`의 위치에 삽입된다. 버그?
+1. `t`의 갯수와 `s[i:j:k]`의 갯수와 같아야 한다.
 
 ## 참조(reference)
 
