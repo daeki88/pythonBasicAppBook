@@ -258,7 +258,7 @@ print("함수2을 부른 후의 ㄱ:", ㄱ)
 
 식별자를 찾는 순서는 가장 먼저 지역(**L**ocal)에서, 즉 함수 안에서 찾고 지역에 없으면 함수를 포함하고(**E**nclosing) 있는 함수 내에서 찾고(만일 함수를 포함하고 있는 함수가 존재한다면) 거기도 없으면 모듈 안에서(**G**lobal) 찾는다. 여기에서도 찾을 수 없으면 내장 영역(**B**uiltin)에서 찾게되고 찾지 못하면 NameError를 발생하게 된다. 이러한 검색 규칙을 LEGB 검색이라고 부른다.
 
-#### LG 예제
+#### 지역, 전역 변수(LG) 예제
 
 
 ```python
@@ -279,7 +279,7 @@ print('함수() 밖에서:', 변수1)
 - 줄4: `함수()` 안에서 사용된 `변수1`은 먼저 함수 안에서 찾을 수 있는 이름(지역 변수)인지를 살펴본다. 그런데 `함수1()`에서는 정의되지 않았으므로 전역변수인지를 검색한다. 전역에서 정의되어 있으므로 전역 변수에서 객체를 가져와서 사용하게 된다.
 - 줄7에 있는 `변수1`도 마찬가지로 전역에서 객체를 가져와서 사용하게 된다.
 
-#### 지역 예제
+#### 지역 변수 예제
 
 
 ```python
@@ -327,6 +327,10 @@ print('함수() 밖에서:', 변수1)
 - 줄8, `함수()`를 부르기 전이므로 `전역 값`이 출력이 되고
 - 줄9에서 함수를 부르면 전역 변수로 선언되었으므로 값이 `지역 값`으로 바뀌게 되고 함수 안에서 출력이 된다.
 - 줄10은 9번째 줄에서 바뀐 값을 그대로 출력하게 된다.
+
+** 직접하기 **
+
+- 위 코드 4번째, 5번째 줄을 서로 바꾸어 실행을 해보고 결과에 대해서 이야기해보자.
 
 #### 에러 예제
 
@@ -381,10 +385,10 @@ print('함수() 밖에서:', 변수1)
 변수1 = '전역 값'
 
 def 외부함수():
-    변수1 = '포함된 값'
+    변수1 = '외부함수 값'
 
     def 내부함수():
-        변수1 = '지역 값'
+        변수1 = '내부함수 값'
         print(변수1)
 
     내부함수()
@@ -392,25 +396,29 @@ def 외부함수():
 외부함수()
 ```
 
-    지역 값
+    내부함수 값
     
 
 - 줄8의 `변수1`은 내부함수에서 선언되어있는지를 먼저 찾게 된다. 그런데 7번째 줄에서 `지역 값`으로 정의되있으므로 그 값을 불러다 사용하게 되는 것이다.
 
-#### nonlocal 변수 예제
+** 직접하기 **
 
-함수 안에 함수가 정의 되어 있을 때 `nonlocal` 예약어를 이용하여 밖에 있는 함수에서 선언된 변수를 안에 함수 내에서 변경할 수 있도록 할 수 있다. 마치 함수 안에서 `global`을 이용하여 전역변수를 이용하는 것과 비슷한다. 다른 점은 포함된 함수 안에서 바로 밖의 함수에서 선언된 변수를 변경할 수 있게 한다는 점이 다르다.
+- 위 LEG 예제에서 7번째 줄을 주석 처리하고 실행하면 어떤 값이 출력되는지를 확인하고 이유를 말해보시오.
+
+#### <a name="nonlocal변수예제"></a>nonlocal 변수 예제
+
+함수 안에 함수가 정의 되어 있을 때 `nonlocal` 예약어를 이용하여 밖에 있는 함수에서 선언된 변수를 안에 함수 내에서 변경할 수 있도록 할 수 있다. 마치 함수 안에서 `global`을 이용하여 전역변수를 이용하는 것과 비슷한다. 다른 점은 포함된 함수 안에서 바로 밖의 함수에서 선언된 변수를 변경할 수 있게 한다는 점이 다르다. `nonlocal`은 전역변수도 지역변수도 아닌 변수를 의미한다.
 
 
 ```python
 변수1 = '전역 값'
 
 def 외부함수():
-       변수1 = '지역 값'
+       변수1 = '외부함수 값'
        print('외부함수 안에서 내부함수 실행 전:', 변수1)
        def 내부함수():
            nonlocal 변수1
-           변수1 = '내부 값'
+           변수1 = '내부함수 값'
            print('내부함수 안에서:', 변수1)
        내부함수()
        print("외부함수 안에서 내부함수 실행 후:", 변수1)
@@ -418,14 +426,19 @@ def 외부함수():
 print("외부함수 실행 후:", 변수1)
 ```
 
-    외부함수 안에서 내부함수 실행 전: 지역 값
-    내부함수 안에서: 내부 값
-    외부함수 안에서 내부함수 실행 후: 내부 값
+    외부함수 안에서 내부함수 실행 전: 외부함수 값
+    내부함수 안에서: 내부함수 값
+    외부함수 안에서 내부함수 실행 후: 내부함수 값
     외부함수 실행 후: 전역 값
     
 
 - 7번째 줄에서 `변수1`을 `nonlocal`로 선언했기 때문에 `외부함수()` 4번째 줄에서 선언된 `변수1`을 변경할 수 있게 된 것이다.
 - 줄11, 따라서 10번째 줄에서 `내부함수()`를 불러서 `변수1`의 값을 `내부 값`으로 변경된 값이 그대로 출력되는 것을 볼 수 있다.
+
+** 직접하기 **
+
+- 위 `nonlocal`변수 예제에서 4번째 줄을 주석 처리한 후 실행된 결과를 보고, 이유를 말해보시오.
+- 같은 예제에서 3번째와 4번째 줄 사이에 `global 변수1`을 추가한 후 실행해보고 결과에 대한 이유를 말해보시오.
 
 #### LEGB 예제
 
@@ -490,7 +503,7 @@ print('ㄱ은?', ㄱ)
 
 ## 패키지
 
-여러 개의 모듈들과 `__init__.py` 파일을 모아놓은 폴더를 패키지라고 한다. 예를 들어 음악 프로그램을 만들려고 할 때 효과(effects)를 담당하는 부분과 필터(filters)을 담당하는 부분들, 파일 형식들을 담당하는 부분(formats)의 기능들이 필요할 것이다. 이렇게 각각의 기능을 담당하는 모듈들을 각각의 폴더에 모아놓으면 개발을 할 때 이해하기가 좋고 편리할 것이다. 따라서 sound라는 폴더 밑에 effects, filters, formats 하위 폴더를 만들고 각 폴더에 필요한 모듈들을 만들어 개발하게 된다. sound 패키지 밑에 effects, filters, formats 하위 패키지가 존재하게 된다.
+여러 개의 모듈들과 `__init__.py` 파일을 모아놓은 폴더를 [패키지](https://docs.python.org/3/tutorial/modules.html#packages)라고 한다(파이썬 3.3부터는 `__init__.py`파일이 없어도 된다. 파이썬 개선 제안서 [PEP 420](https://www.python.org/dev/peps/pep-0420/)을 참조하라. 파이썬 하위 버전과 호환하기 위해서는 사용하는 것이 좋다.). 예를 들어 음악 프로그램을 만들려고 할 때 효과(effects)를 담당하는 부분과 필터(filters)을 담당하는 부분들, 파일 형식들을 담당하는 부분(formats)의 기능들이 필요할 것이다. 이렇게 각각의 기능을 담당하는 모듈들을 각각의 폴더에 모아놓으면 개발을 할 때 이해하기가 좋고 편리할 것이다. 따라서 sound라는 폴더 밑에 effects, filters, formats 하위 폴더를 만들고 각 폴더에 필요한 모듈들을 만들어 개발하게 된다. sound 패키지 밑에 effects, filters, formats 하위 패키지가 존재하게 된다.
 ```python
 sound
 |-- effects
@@ -541,9 +554,11 @@ sound
 
 <img src="images/pycharm_new_package_modules.png" style="width: 600px"/>
 
-`모듈1.py` 안에 다음과 같은 함수를 만들어 보자.
+`모듈1.py` 안에 다음과 같은 문장을 넣자.
 
 ```python
+print('이곳은 "{}" 입니다.'.format(__name__))
+
 def 함수1():
     print('모듈1 안에 있는 함수1 입니다')
 ```
@@ -580,6 +595,45 @@ from <패키지이름>.<하위패키지> import <모듈 이름>
 from sound.effects import echo
 ```
 
+`from <패키지> import <항목>` 구문에서 `<항목>`은 `<패키지>`의 하위 모듈(또는 하위 패키지)이거나 `<패키지>`에서 정의된 이름이 될 수 있다. `<항목>`이 `<패키지>`에 정의되어 있는지를 먼저 확인하고, 없으면 `<항목>`을 모듈이라고 가정하고 `<항목>` 모듈을 부르려고 시도한다. 모듈을 찾을 수 없으면 [ImportError](https://docs.python.org/3/library/exceptions.html#ImportError)가 발생한다.
+
+** 직접하기 **
+
+- `간단한패키지` 아래의 `모듈2.py`에 다음과 같은 문장을 넣고 파이썬 명령창에서 `모듈2`를 불러보자.
+
+```python
+print('이곳은 "{}" 입니다.'.format(__name__))
+
+def 함수():
+    print('{} 안에 있는 함수 입니다'.format(__name__))
+```
+- `모듈2`에 있는 `함수()`를 불러보자.
+
+#### <a name="파이썬명령창에서패키지부르기"></a> 파이썬 명령창에서 패키지 부르기
+
+패키지를 부르기 전에 패키지 폴더가 포함된 디렉토리가 `sys.path` 안에 등록되어 있어야 한다. 따라서 파이썬 명령창을 이용해서 패키지를 부르기 위해서는 먼저 `sys.path`에 등록을 한다.
+
+예를 들어, `C:\work` 안에 `간단한패키지`라는 패키지가 있다고 가정하자. 먼저 `sys.path`에 `C:\work` 디렉토리를 다음과 같이 추가한다.
+
+<img src="images/sys_path_append.png" style="width: 600px;"/>
+
+1. `sys` 모듈을 `import` 한다.
+1. `c:\work` 디렉토리를 `sys.path`에 추가한다.
+1. `sys.path`에 추가된 것을 확인한다.
+
+`간단한패키지`안의 모듈들을 불러오기(import) 위해서는 `from ... import ...` 문장을 사용한다.
+
+
+```python
+import sys
+sys.path.append('c:\work')
+
+from 간단한패키지 import 모듈1
+```
+
+    이곳은 "간단한패키지.모듈1" 입니다.
+    
+
 ** 직접 하기 **
 
 - `sound` 패키지의 하위패키지 `effects` 패키지 안의 `echo` 모듈 안에 다음과 같은 함수를 만들고 그 함수를 불러보자.
@@ -612,58 +666,10 @@ environ({'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\dyoon\\App
 import os
 
 for key in os.environ:
-    print(key)
+    print(key, end=", ")
 ```
 
-    ALLUSERSPROFILE
-    APPDATA
-    COMMONPROGRAMFILES
-    COMMONPROGRAMFILES(X86)
-    COMMONPROGRAMW6432
-    COMPUTERNAME
-    COMSPEC
-    CONFIGSETROOT
-    DOCKER_TOOLBOX_INSTALL_PATH
-    HOMEDRIVE
-    HOMEPATH
-    LOCALAPPDATA
-    LOGONSERVER
-    NUMBER_OF_PROCESSORS
-    ONEDRIVE
-    OS
-    PATH
-    PATHEXT
-    PROCESSOR_ARCHITECTURE
-    PROCESSOR_IDENTIFIER
-    PROCESSOR_LEVEL
-    PROCESSOR_REVISION
-    PROGRAMDATA
-    PROGRAMFILES
-    PROGRAMFILES(X86)
-    PROGRAMW6432
-    PSMODULEPATH
-    PUBLIC
-    SESSIONNAME
-    SYSTEMDRIVE
-    SYSTEMROOT
-    TEMP
-    TMP
-    USERDOMAIN
-    USERDOMAIN_ROAMINGPROFILE
-    USERNAME
-    USERPROFILE
-    VBOX_MSI_INSTALL_PATH
-    WINDIR
-    CONDA_PREFIX
-    JPY_INTERRUPT_EVENT
-    IPY_INTERRUPT_EVENT
-    JPY_PARENT_PID
-    TERM
-    CLICOLOR
-    PAGER
-    GIT_PAGER
-    MPLBACKEND
-    
+    ALLUSERSPROFILE, APPDATA, COMMONPROGRAMFILES, COMMONPROGRAMFILES(X86), COMMONPROGRAMW6432, COMPUTERNAME, COMSPEC, CONFIGSETROOT, DOCKER_TOOLBOX_INSTALL_PATH, HOMEDRIVE, HOMEPATH, LOCALAPPDATA, LOGONSERVER, NUMBER_OF_PROCESSORS, ONEDRIVE, OS, PATH, PATHEXT, PROCESSOR_ARCHITECTURE, PROCESSOR_IDENTIFIER, PROCESSOR_LEVEL, PROCESSOR_REVISION, PROGRAMDATA, PROGRAMFILES, PROGRAMFILES(X86), PROGRAMW6432, PSMODULEPATH, PUBLIC, SESSIONNAME, SYSTEMDRIVE, SYSTEMROOT, TEMP, TMP, USERDOMAIN, USERDOMAIN_ROAMINGPROFILE, USERNAME, USERPROFILE, VBOX_MSI_INSTALL_PATH, WINDIR, CONDA_PREFIX, JPY_INTERRUPT_EVENT, IPY_INTERRUPT_EVENT, JPY_PARENT_PID, TERM, CLICOLOR, PAGER, GIT_PAGER, MPLBACKEND, 
 
 ```python
 >>> os.environ['path']
@@ -730,10 +736,38 @@ print((내모듈2.내나이 - 내모듈1.내아이) == (내모듈2.년도 - 내�
 ```python
 print("내 이름은", __name__)
 ```
-`이름공간_실험.py`를 실행해보고 결과에 대해서 이유에 대해서 말해보시오.
+`이름공간_실험.py`를 실행해보고 결과에 대해서 말해보시오.
 1. `내모듈1.py`에 다음 문장을 삽입하자.
 ```python
 if __name__ == "__main__":
     print("이 글은 import를 하면 볼 수가 없습니다.")
 ```
 `내모듈1.py`와 `이름공간_실험.py` 를 각각 실행해보고 결과에 대해서 말해보시오.
+1. [nonlocal 변수 예제](#nonlocal변수예제) 코드의 `내부함수()` 안에 다음과 같은 `맨안함수()`를 추가하자.
+
+    ```python
+    변수1 = '전역 값'
+
+    def 외부함수():
+           변수1 = '외부함수 값'
+           print('외부함수 안에서 내부함수 실행 전:', 변수1)
+           def 내부함수():
+               nonlocal 변수1
+               변수1 = '내부함수 값'
+               print('내부함수 안에서:', 변수1)
+
+               def 맨안함수():
+                    nonlocal 변수1
+                    변수1 = '맨안함수 값'
+                    print('맨안함수 안에서:', 변수1)
+
+               맨암함수()
+               print("내부함수 안에서 맨안함수 실행 후:", 변수1)
+
+           내부함수()
+           print("외부함수 안에서 내부함수 실행 후:", 변수1)
+    외부함수()
+    print("외부함수 실행 후:", 변수1)
+    ```
+위 코드를 실행 결과를 보고 `nonlocal`이 작동하는 방식에 대해서 이야기해 보시오.
+1. 위 코드 7번째 줄 `nonlocal 변수1`을 주석 처리 한 후 실행해보고 결과에 대해서 이야기해 보시오.
