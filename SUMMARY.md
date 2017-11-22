@@ -16,4 +16,4 @@
 
 * [예외](Exceptions.md)
 
-* [문서데이터] (TextData.md)
+* [문서데이터](TextData.md)
