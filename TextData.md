@@ -140,24 +140,43 @@ conda install -c anaconda beautifulsoup4 # 아나콘다를 이용할 경우
 
 #### BeautifulSoup 웹페이지 파싱
 
-웹 문서를 입력받아 bs객체를 만든다. bs 객체를 이용하여 필요한 정보들에 접근해서 원하는 것들을 수집할 수 있다. 원하는 성분으로 접근하는 방법은 여러 가지가 있으나 `select()` 메소드를 이용하는 방법이 있다. `select` 메소드의 인자는 css selector 조합 문자열을 사용한다. css selector에 대한 자세한 설명은 [W3 Schools CSS Selector Reference](https://www.w3schools.com/cssref/css_selectors.asp)를 참조한다. 다음은 몇 가지 예를 보여준다.
+웹 문서를 입력받아 bs객체를 만든다. bs 객체를 이용하여 필요한 정보들에 접근해서 원하는 것들을 수집할 수 있다. 원하는 성분으로 접근하는 방법은 여러 가지가 있으나 `select()` 메소드를 이용하는 방법이 있다. `select` 메소드의 인자는 [CSS(Cascading Style Sheets)](https://www.w3schools.com/css/default.asp) selector 조합 문자열을 사용한다. css selector에 대한 자세한 설명은 [W3 Schools CSS Selector Reference](https://www.w3schools.com/cssref/css_selectors.asp)를 참조한다. 다음은 몇 가지 예를 보여준다.
+
+html 성분(element 또는 tag)은 다음과 같은 형식으로 이루어져 있다.
+
+```html
+<tag_or_element attribute="value">text</tag_or_element>
+```
+
+다음은 html 예제의 일부이다.
+
+```html
+<div class="intro"> <!-- div는 성분, class는 속성, "intro"는 class 속성값이다.-->
+<p>My name is Donald <span id="Lastname">Duck.</span></p>
+
+<p id="my-Address">I live in Duckburg</p>
+
+<p>I have many friends:</p>
+</div>
+```
 
 | Selector | 예제 | 설명 | CSS 버전 |
 | ---- | ---- | ----- | ---- | ----- |
 |`.class` | `.intro` | `class="intro"`인 모든 성분 선택 | 1 |
 |`#id` | `#firstname` | `id="firstname"`인 모든 성분 선택 | 1 |
 | `*` | `*` | 모든 성분 선택 | 2 |
+| `element *` | `*` | `div` 안에 있는(자손) 모든 성분 선택. 중복하면서 선택된다. | 2 |
 |`element` | `p` | `<p>` 성분 모두 선택 | 1 |
-|`element, element` | `div, p` | `<div>` 또는 `<p>`를 갖는 모든 성분 선택 | 1 |
-|`element element` | `div p` | `<div>` 성분 안에 모든 `<p>` 성분 선택| 1 |
-|`element>element` | `div > p` | 부모가 `<div>`인 모든 `<p>` 성분 선택 | 2 |
-|`element+element` | `div + p` | `<div>`성분 바로 다음 `<p>` 성분 선택 | 2 |
-|`element1~element2` | `p ~ ul`| `<p>` 바로 다음에 있는 `<ul>` 성분들 선택 | 3 |
+|`element, element` | `div, p` | `<div>` 또는 `<p>`를 갖는 모든 성분 선택. 중복을 허락하지 않는다. | 1 |
+|`element element` | `div p` | `<div>` 성분 안에(자식) 모든 `<p>` 성분 선택| 1 |
+|`element > element` | `div > p` | 부모가 `<div>`인 모든 `<p>` 성분 선택 | 2 |
+|`element + element` | `div + p` | `<div>`와 형제이며 `<div>` 바로 아래쪽에 붙어 있는 `<p>` 성분 선택 | 2 |
+|`element1 ~ element2` | `p ~ ul`| `<p>` 와 형제이며 `<p>` 아래쪽에 있는 모든 `<ul>` 성분들 선택 | 3 |
 |`[attribute]` | `[target]` | 속성이 `target`인 모든 성분 선택 | 2 |
 |`[attribute=value]` | `[target=_blank]` | 속성이 `target`이고 `target`의 값이 `_blank`인 모든 성분 선택 | 2 |
-|`[attribute~=value]` | `[title~=flower]` | `title`속성을 갖고 속성값이 `flower`단어를 포함하는 모든 성분들 선택 | 2 |
-|`[attribute` &#124;`=value`] | `[lang` &#124; `=en`] | 속성이 `lang`이고 속성의 값이 `en`으로 시작하는 모든 성분 선택 | 2 |
-|`:nth-of-type(n)` | `p:nth-of-type(2)` | `<p>`의 부모의 두번째 `<p>`성분 선택 | 3|
+|`[attribute~=value]` | `[title~=flower]` | `title`속성을 갖고 속성값이 `flower`를 포함하는 모든 성분들 선택 | 2 |
+|`[attribute`&#124;`=value`] | `[lang`&#124;`=en`] | 속성이 `lang`이고 속성의 값이 `en` 또는 `en-`로 시작하는 모든 성분 선택 | 2 |
+|`:nth-of-type(n)` | `p:nth-of-type(2)` | `<p>`의 부모 아래에 있는 두번째 `<p>`성분 선택 | 3|
 
 ```python
 import bs4
@@ -276,7 +295,7 @@ and they lived at the bottom of a well.</p>
 """
 ```
 
-- 성분들을 찾는다.
+** 성분들을 찾는다. **
 
 
 ```python
@@ -291,6 +310,8 @@ soup.select('title')
 
 
 
+성분이 `title`인 것을 모두 찾는다.
+
 
 ```python
 soup.select("p:nth-of-type(3)")
@@ -303,7 +324,9 @@ soup.select("p:nth-of-type(3)")
 
 
 
-- 성분 밑의 성분 찾기
+`p`의 부모의 자손중 3번째 `p`를 찾는다.
+
+**  성분 밑의 성분 찾기 **
 
 
 ```python
@@ -319,6 +342,8 @@ soup.select("body a")
 
 
 
+`body`의 자손 중 `a` 성분을 모두 찾는다.
+
 
 ```python
 soup.select("html head title")
@@ -331,7 +356,9 @@ soup.select("html head title")
 
 
 
-- 성분 바로 밑의 성분 찾기
+`html` 자손으로 `head` 자손 중 `title` 성분을 모두 찾는다.
+
+**성분 바로 밑의 성분 찾기**
 
 
 ```python
@@ -344,6 +371,8 @@ soup.select("head > title")
     [<title>The Dormouse's story</title>]
 
 
+
+`head` 성분의 자식 중 `title` 성분을 모두 찾는다.
 
 
 ```python
@@ -359,6 +388,8 @@ soup.select("p > a")
 
 
 
+`p`의 자식 중 `a`인 성분 모두 찾는다.
+
 
 ```python
 soup.select("p > a:nth-of-type(2)")
@@ -370,6 +401,8 @@ soup.select("p > a:nth-of-type(2)")
     [<a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>]
 
 
+
+`p`의 자식 중의 `a` 성분들 중에서 2번째 성분을 찾는다.
 
 
 ```python
@@ -383,6 +416,8 @@ soup.select("p > #link1")
 
 
 
+`p`의 자식 중 `id`가 `link1`인 성분을 찾는다.
+
 
 ```python
 soup.select("body > a")
@@ -395,7 +430,9 @@ soup.select("body > a")
 
 
 
-- 같은 수준의 성분들 찾기
+`body` 자식 중 `a` 성분을 찾지만 없으므로 빈 리스트가 된다.
+
+**같은 수준의 성분들 찾기**
 
 
 ```python
@@ -410,6 +447,8 @@ soup.select("#link1 ~ .sister")
 
 
 
+`id`가 `link1`인 형제들 중 `class` 값이 `sister`인 모든 성분 찾는다.
+
 
 ```python
 soup.select("#link1 + .sister")
@@ -422,7 +461,9 @@ soup.select("#link1 + .sister")
 
 
 
-- CSS 클래스에 의한 성분 찾기
+`id`가 `link1`인 형제들 중 `id`가 `link1`인 성분 바라 아래 붙어있는 `class` 값이 `sister`인 성분을 찾는다.
+
+**CSS 클래스에 의한 성분 찾기**
 
 
 ```python
@@ -438,6 +479,8 @@ soup.select(".sister")
 
 
 
+클래스 값이 `sister`인 성분들 모두 찾는다.
+
 
 ```python
 soup.select("[class~=sister]")
@@ -452,7 +495,9 @@ soup.select("[class~=sister]")
 
 
 
-- ID에 의한 성분 찾기
+클래스 **속성값**이 `sister`를 포함하는 모든 성분을 찾는다.
+
+**ID에 의한 성분 찾기**
 
 
 ```python
@@ -589,9 +634,148 @@ print("헤드라인 제목: ", title)
 - 네이버 사이트에서 [코스피 실시간 지수](http://finance.naver.com/sise/sise_index.nhn?code=KOSPI)를 출력하시오.
 - [네이버 환율 사이트](http://info.finance.naver.com/marketindex/?tabSel=exchange#tab_section)에서 엔화 현찰 살때 팔때 환율을 출력하시오. `iframe`으로 연결되어 있어서 사이트 주소를 정확히 입력해야 한다.
 
+### 셀레늄(Selenium)
+
+[Selenium](http://www.seleniumhq.org)은 웹 브라우저의 기능을 하도록 하는 모듈이다. 브라우저를 직접 실행하지 않고 selenium 메소드들을 이용해서 웹 브라우저 기능을 대신할 수 있게 한다. Selenium은 Selenium 2(Selenium WebDriver), Selenium 1(Selenium RC), Selenium IDE, Selenium-Grid 툴로 이루어 졌다. 우리가 사용하는 것은 Selenium 2(Selenium WebDriver)이다. 이것은 프로그래밍 언어(Java, C#, Python, Javascript등)에 맞는 인터페이스를 제공하여 프로그래밍을 이용하여 사용하기 편리하다. [Selenium 2](http://www.seleniumhq.org/docs/03_webdriver.jsp)를 이용하기 위해서는 웹 브라우저에 맞는 드라이버를 다운로드 해야 한다. 여기서는 웹 브라우저가 없이도 사용할 수 있는 [PhantomJS](http://phantomjs.org/quick-start.html)를 이용한다. 파이썬에서 사용하는 selenium에 대한 문서는 [http://selenium-python.readthedocs.io/index.html](http://selenium-python.readthedocs.io/index.html)을 참고한다. 더 자세한 사용법은 [Selenium 파이썬 웹드라이버 API](http://selenium-python.readthedocs.io/api.html)를 참조하자.
+
+#### 드라이버 다운로드
+
+`phantomjs` 드라이버를 인터넷으로부터 다운받아 작업 디렉토리 아래 `drivers` 폴더에 넣는다. 다운로드하는데 약간의 시간이 걸린다.
+
+
+```python
+import urllib.request
+import os
+
+directory = 'drivers'
+if not os.path.exists(directory):
+    os.makedirs(directory)
+
+url = 'https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-windows.zip'
+
+fpath = directory + '/' + 'phantomjs-2.1.1-windows.zip'
+
+if not os.path.exists(fpath):
+    urllib.request.urlretrieve(url, fpath)
+```
+
+#### 압축해제
+
+다운받은 파일을 압축해제한다.
+
+
+```python
+import zipfile
+zip_ref = zipfile.ZipFile(fpath, 'r')
+zip_ref.extractall(directory)
+zip_ref.close()
+```
+
+#### 압축해제된 경로 연결
+
+
+```python
+filename = os.path.split(url)[1] # 파일 이름 추출
+file_ext = os.path.splitext(filename) # 파일이름과 확장자로 분리
+
+phantom_path = directory + '/' + file_ext[0] + '/bin/phantomjs.exe'
+```
+
+#### 간단한 사용법
+
+먼저 driver를 설정한다. 드라이버는 웹 브라우저에 해당하는 것이라고 생각할 수 있다. 드라이버는 브라우저의 종류에 따라 설치되어 있어야 한다. 위에서 PhantomJS 드라이버를 설치했다. 드라이버 연결할 때는 드라이버의 위치를 알려주는 방법과 운영체제의 경로에 있으면 된다.
+
+
+```python
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
+chrome_path = 'drivers/chromedriver.exe'
+
+os.path.exists(chrome_path)
+driver = webdriver.Chrome(chrome_path)
+driver.get("http://www.python.org")
+assert "Python" in driver.title
+elem = driver.find_element_by_name("q")
+elem.clear()
+elem.send_keys("pycon")
+elem.send_keys(Keys.RETURN)
+assert "No results found." not in driver.page_source
+driver.close()
+```
+
+#### 사이트에서 원하는 자료 가져오기
+
+셀레늄을 이용해서 [행정안전부 지방물가정보](http://www.mois.go.kr/frt/sub/a02/farmProductPriceList/screen.do) 사이트에 있는 2017년 10월 농축산물 평균가격을 가져와보자. 페이지 소스 보기를 하면 웹 페이지 상에 보이던 표가 보이지 않는 것을 알 수 있다. 이것은 표를 보여주는 부분이 [`iframe`](https://www.w3schools.com/tags/tag_iframe.asp)으로 처리되었기 때문이다. `iframe`은 inline frame으로 다른 위치에 있는 웹 페이지를 현재 위치에 보이게 하는 것이다. 따라서 `iframe` 위치로 이동하는 것이 필요하다.
+
+
+```python
+from selenium import webdriver
+from selenium.webdriver.support.ui import Select
+import pandas as pd
+
+# PhantomJS 드라이버 설정
+driver = webdriver.PhantomJS(executable_path=phantom_path)
+
+# 사이트에서 웹 문서 수집
+site = 'http://www.mois.go.kr/frt/sub/a02/farmProductPriceList/screen.do'
+driver.get(site)
+
+# iframe 으로 이동
+iframe = driver.find_element_by_css_selector('iframe')
+driver.switch_to.frame(iframe)
+
+# 2017년 10월 클릭
+elem = driver.find_element_by_id('year')
+select = Select(elem)
+select.select_by_value("2017")
+elem = driver.find_element_by_id('month')
+select = Select(elem)
+select.select_by_value("10")
+
+driver.find_element_by_id('srch').click()
+html = driver.page_source
+
+driver.close()
+
+bs = bs4.BeautifulSoup(html, 'html.parser')
+tables = bs.select('div > table > tbody')
+rows = tables[0].find_all('tr')
+for row in rows:
+    cols = row.find_all('td')
+    cols = [ele.text.strip() for ele in cols]
+    print(cols)
+```
+
+    ['서울', '9,864', '2,619', '6,353', '2,281', '3,330', '1,769', '3,622', '3,329', '11,153', '48,638']
+    ['부산', '9,382', '2,370', '5,962', '3,497', '5,046', '1,961', '2,929', '3,329', '9,601', '43,952']
+    ['대구', '9,428', '2,455', '6,423', '2,447', '4,345', '1,691', '3,428', '3,071', '9,373', '41,517']
+    ['인천', '8,691', '2,438', '5,652', '2,179', '3,797', '1,622', '3,761', '2,783', '9,317', '42,322']
+    ['광주', '10,433', '2,447', '5,219', '2,346', '4,240', '2,061', '3,730', '3,382', '9,868', '43,047']
+    ['대전', '8,013', '2,599', '5,091', '3,169', '2,905', '1,589', '3,876', '4,131', '9,329', '42,780']
+    ['울산', '9,160', '2,196', '6,485', '2,587', '4,608', '1,935', '3,581', '3,957', '10,523', '42,880']
+    ['경기', '9,627', '2,389', '5,917', '2,542', '4,263', '1,860', '3,713', '3,304', '9,848', '44,653']
+    ['강원', '9,251', '2,410', '5,627', '2,208', '4,249', '1,871', '3,186', '3,445', '8,535', '45,319']
+    ['충북', '9,851', '2,643', '5,550', '2,908', '4,044', '2,019', '3,132', '3,279', '9,297', '42,971']
+    ['충남', '8,258', '2,146', '5,626', '2,400', '4,161', '1,914', '3,008', '3,784', '8,169', '44,093']
+    ['전북', '8,892', '2,196', '5,353', '2,954', '3,270', '1,857', '3,557', '3,509', '8,580', '42,440']
+    ['전남', '8,716', '2,098', '5,391', '3,072', '4,268', '2,188', '3,217', '3,210', '7,373', '40,663']
+    ['경북', '7,675', '2,136', '5,941', '2,953', '4,611', '2,032', '3,006', '2,588', '9,240', '41,505']
+    ['경남', '8,795', '2,165', '5,327', '2,960', '3,904', '1,917', '3,189', '3,027', '8,056', '41,187']
+    ['제주', '8,425', '2,528', '6,298', '2,860', '5,522', '2,070', '2,910', '3,087', '8,152', '43,017']
+    
+
+** 직접하기 **
+
+- 행정안전부 지방물가정보 사이트의 [지방 공공 요금](http://www.mois.go.kr/frt/sub/a02/publicPriceList/screen.do) 페이지에서 **2016년 1월** 평균요금을 출력하시오.
+- 평균요금을 숫자로 바꾸시오.
+- [고려대 세종 캠퍼스 홈페이지](http://sejong.korea.ac.kr/kr)에 있는 셔틀버스 시간표를 출력하시오.
+- 네이버 로그인을 해서 이메일 제목을 출력하시오.
+
 ## 분석
 
 ### pandas
+
 `pandas` 모듈은 데이터를 다루기 편리한 함수들을 제공한다.
 
 #### 생성
@@ -628,7 +812,7 @@ df = dfs[0]
 print(df)
 ```
 
-pd.read_html('site address')을 이용하여 웹 페이지에 있는 표(table)를 pandas DataFrame 리스트로 변환한다.
+참고: `pd.read_html(웹페이지)`은 웹 페이지에 있는 표(table)를 pandas DataFrame **리스트**로 변환한다.
 
 - 데이터 프레임 내용 출력
 
