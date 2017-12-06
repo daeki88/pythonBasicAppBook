@@ -2584,7 +2584,7 @@ df.set_index('구분').plot(kind='line', xticks=np.arange(len(df['구분'])), ro
 
 
 
-![png](images/output_89_1.png)
+![png](output_89_1.png)
 
 
 `xticks=np.arange(16)`는 xtick이 보여질 위치를 지정하는 것이다.
@@ -2610,7 +2610,7 @@ df.boxplot()
 
 
 
-![png](images/output_91_1.png)
+![png](output_91_1.png)
 
 
 - 파이 그래프
@@ -2629,7 +2629,7 @@ df_excel['Political Party'].value_counts().plot(kind="pie")
 
 
 
-![png](images/output_93_1.png)
+![png](output_93_1.png)
 
 
 - 바차트
@@ -2647,7 +2647,7 @@ df_excel['Political Party'].value_counts().plot(kind="bar")
 
 
 
-![png](images/output_95_1.png)
+![png](output_95_1.png)
 
 
 ## 참고 사이트
